@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}
+    发布讨论
+{% endblock %}
+{% block source %}
+    {{ form.media }}
+{% endblock %}
+{% block content %}
+    <div class="editor">
+        <form action="" method="post">
+            {% csrf_token %}
+            <div>
+                <label for="title" style="display: inline-block;width: 60px;">标题：</label>
+                <input type="text" name="title" class="form-control" id="title" value="{{ discussion.title }}"
+                       placeholder="请在此描述讨论贴的主要内容"
+                       required style="display: inline-block;width: 80%">
+            </div>
+            {{ form.as_p }}
+            <input type="submit" name="submit" value="发布" class="btn btn-success">
+        </form>
+    </div>
+{% endblock %}

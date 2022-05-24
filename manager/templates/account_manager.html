@@ -1,0 +1,58 @@
+{% extends 'manager_base.html' %}
+{% block title %}
+    文章管理
+{% endblock %}
+{% block content %}
+    <h3>文章列表</h3>
+
+    <div style="margin-top: 20px;">
+        <table class="table table-hover" id="problem_table">
+            <tr style="line-height: 10px;">
+                <th scope="col">用户名</th>
+                <th scope="col">注册日期</th>
+                <th scope="col">邮箱</th>
+                <th scope="col">学校</th>
+                <th scope="col">管理员</th>
+                <th></th>
+            </tr>
+            <tbody id="problem_list">
+            {% for account in account_list %}
+                <tr style="line-height: 5px; font-size: 25px">
+                    <td display="inline">
+                        <a href="{{ account_detail }} account.id" class="edit-text" target="_blank"
+                           id="file_{{ account.id }}">{{ account.username }}</a>
+                    </td>
+                    <td>{{ account.register_data|date:'Y-m-d' }}</td>
+                    <td>{{ account.email }}</td>
+                    <td>{{ account.school }}</td>
+                    <td>(% if account.is_superuser %} 是 {% else %} 否 {% endif %} </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if pagination %}
+        <div class="col-9" style="margin-top: 20px;">
+            <ul class="pagination" id="pagination">
+                <li class="page-item {% if pagination.is_first_page == Ture %}disabled{% endif %}">
+                    <a class="page-link"
+                       {% if pagination.is_first_page == False %}href="{% url 'account_overview' %}?page=1" {% endif %}>< </a>
+                </li>
+
+                {% for page in pagination.pagination %}
+                    <li class="page-item {% if page == current_page %} active{% endif %}">
+                        <a class="page-link"
+                           {% if page != '...' %}href="{% url 'account_manager' %}?page={{ page }}{% endif %}">{{ page }}</a>
+                    </li>
+                {% endfor %}
+
+                <li class="page-item {% if pagination.is_last_page == Ture %}disabled{% endif %}">
+                    <a class="page-link"
+                       {% if pagination.is_last_page == False %}href="{% url 'account_manager' %}?page={{ pagination.page_count }}" {% endif %}>></a>
+                </li>
+            </ul>
+        </div>
+    {% endif %}
+
+
+{% endblock %}

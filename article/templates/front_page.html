@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block tool_bar %}
+    <div class="row">
+        <div class="col-6">
+
+            <ul class="list-group">
+                <a class="list-group-item bg-light">
+                    <h4 class="list-group-item-heading">
+                        热榜推荐 TOP10
+                    </h4>
+                </a>
+                {% for article in hot_list %}
+                    <li class="list-group-item">
+                        <a href="{% url 'article_detail' article.id %}" class="modal-title">{{ article.title }}</a><br>
+                        <span class="hint">
+                            发表于<em>{{ article.release_time|date:'Y-m-d H:i' }}</em>
+                            by <a >{{ article.author.username }}</a>
+                            <div class="pull-right" style="float: right;">
+                                评论数<em>{{ article.comment_count }}</em>
+                                点赞数<em>{{ article.like_count }}</em>
+                            </div>
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="col-6">
+            <ul class="list-group">
+                <a class="list-group-item bg-light">
+                    <h4 class="list-group-item-heading">
+                        最近更新
+                    </h4>
+                </a>
+                {% for article in latest_list %}
+                    <li class="list-group-item">
+                        <a href="{% url 'article_detail' article.id %}" class="modal-title">{{ article.title }}</a><br>
+                        <span class="hint">
+                            <em>{{ article.release_time|date:'Y-m-d H:i' }}</em>
+
+                        </span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}

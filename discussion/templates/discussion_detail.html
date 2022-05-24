@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+{% block title %}
+    {{ discussion.title }}
+{% endblock %}
+{% block source %}
+    <link rel="stylesheet" href="/static/css/code.css">
+    <script type="text/x-mathjax-config">
+    </script>
+    <script src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="dns-prefetch" href="//cdn.mathjax.org" />
+{% endblock %}
+{% block left_content %}
+    {% if msg %}
+        <h2>{{ msg }}</h2>
+    {% else %}
+        <script>
+
+            function post_comment() {
+                console.log('---')
+                var comment_content = document.getElementById('comment-content').value
+                if (comment_content === '') {
+                    return
+                }
+                console.log(comment_content)
+                $.ajax({
+                    url: '{% url 'post_discussion_comment' %}',
+                    type: 'post',
+                    data: {
+                        'content': comment_content,
+                        'discussion_id': '{{ discussion.id }}'
+                    },
+                    success: function (data) {
+                        document.getElementById('comment-content').value = ''
+                        $("#comment-detail").html(data)
+                    }
+                })
+            }
+
+            function post_reply(comment_id) {
+                var reply = document.getElementById('input-reply-' + comment_id).value
+                $.ajax({
+                    url: '{% url 'post_discussion_reply_comment' %}',
+                    type: 'post',
+                    data: {
+                        'discussion_id': '{{ discussion.id }}',
+                        'comment_id': comment_id,
+                        'comment': reply,
+                    },
+                    success: function (data) {
+                        document.getElementById('input-reply-' + comment_id).value = ''
+                        $("#comment-detail").html(data)
+                    }
+                })
+            }
+        </script>
+        <div class="bg-light" style="padding: 10px 10px 10px 20px;">
+            <h1>{{ discussion.title }}</h1>
+            <span class="hint">
+               <a href="{% url 'user_show_info' discussion.author.id %}">{{ discussion.author.username }}</a>
+                发表于&nbsp;<em>{{ discussion.release_time|date:'Y-m-d' }}</em>
+                <div class="pull-right" style="float: right;">
+                    <em>{{ discussion.view_count }}</em>
+                    浏览&nbsp;
+
+                    <span id="likes-click" class="cursor-pointer no-user-select">
+                        <i id="likes-icon" class="fa fa-thumbs-up {% if is_like == True %}color-red{% endif %}"></i>
+                        <span id="likes-count" class="{% if is_like == True %}color-red{% endif %} ">
+                            {% if article.like_count != 0 %}{{ article.like_count }}{% endif %}点赞
+                        </span>
+                    </span>
+                </div>
+            </span>
+        </div>
+        <div id="discussion_content" style="-webkit-box-sizing: border-box;-moz-box-sizing: border-box;">
+            <textarea style="display: none">
+                {% csrf_token %}
+                {{ discussion.content|safe }}
+            </textarea>
+        </div>
+
+        <div class="" id="discussion-content">
+            {% csrf_token %}
+            {{ discussion.content|safe }}
+        </div>
+
+        <script>
+            $(document).on("click","#likes-click",function(){
+                if ("{{ request.session.user_name }}" === ""){
+                    $("#login-modal").modal('show')
+                    return
+                }
+                var status = $("#likes-count").hasClass('color-red')
+                $.ajax({
+                    url: '{% url 'discussion_likes' %}',
+                    type: 'post',
+                    data: {
+                        'discussion_id': '{{ discussion.id }}',
+                        'type':'discussion',
+                        'status': (!status).toString(),
+                    },
+                    success: function (data) {
+                        if (data['like_count'] !== 0) {
+                            $('#likes-count').text(data['like_count'] + '点赞')
+                        } else {
+                            $('#likes-count').text('点赞')
+                        }
+                        if (data['status']) {
+                            $('#likes-icon').addClass('color-red')
+                            $('#likes-count').addClass('color-red')
+                        } else {
+                            $('#likes-icon').removeClass('color-red')
+                            $('#likes-count').removeClass('color-red')
+                        }
+                    }
+                })
+            })
+        </script>
+
+
+        <div id="comment-model" class="bg-light" style="margin-top: 10px; padding-top: 10px;">
+            <div>
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div style="width: 95%; margin-left: 2.5%">
+                        {{ form.content }}
+                    </div>
+                    <div style="text-align: right">
+                        <button type="button" class="btn btn-success" style="margin-top: 10px;margin-right: 2.5%"
+                                id="post-comment"
+                                onclick="post_comment()" >评论
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div id="comment-detail" style="padding-bottom: 10px;">
+                {% include 'comment.html' %}
+            </div>
+        </div>
+
+        <div class="modal fade" id="login-modal" tabindex="-1"
+             aria-labelledby="modal-{{ discussion.id }}" aria-hidden="true">
+            <div class="modal-dialog" style="max-width: 270px;">
+                <div class="modal-content" style="text-align: center">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal-{{ discussion.id }}">您还未登录，请先登录！</h5>
+                    </div>
+                    <div class="modal-footer" style="display: inline-block">
+                        <a type="button" class="btn btn-success" href="{% url 'login' %}">登录
+                        </a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+{% block right_content %}
+    <div class="bg-light mb-3" style="display: inline-block; width: 100%; padding:20px 20px 20px 20px;">
+        <div>
+            <div style="display: inline-block;">
+                <img src="{{ discussion.author.avatar.url }}" alt=""
+                     style="width: 50px;height: 50px;border-radius:25px;">
+            </div>
+            <div style="float: right; width: 160px;">
+                <strong>{{ discussion.author.username }}</strong><br>
+                <small>{{ discussion.author.motto|slice:15 }}{% if discussion.author.motto|length > 15 %}
+                    ...{% endif %}</small>
+            </div>
+        </div>
+    </div>
+{% endblock %}
