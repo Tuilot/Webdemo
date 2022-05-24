@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block tool_bar %}
+    <div style="margin-bottom: 15px;">
+        <a class="feature-a {% if file_type == 'c' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'articlelist'%}?type=c">C++</a>
+        <a class="feature-a {% if file_type == 'java' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'articlelist'%}?type=java">Java</a>
+        <a class="feature-a {% if file_type == 'golang' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'articlelist'%}?type=golang">GoLang</a>
+        <a class="feature-a {% if file_type == 'database' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'articlelist'%}?type=database">数据库</a>
+        <a class="feature-a {% if file_type == 'linux' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'articlelist'%}?type=linux">Linux</a>
+    </div>
+{% endblock %}

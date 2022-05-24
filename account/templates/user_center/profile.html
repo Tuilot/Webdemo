@@ -1,0 +1,91 @@
+{% extends 'user_center/user_center_base.html' %}
+{% block title %}
+    个人资料
+{% endblock %}
+{% block left_content %}
+    {% if msg %}
+        <h5>{{ msg }}</h5>
+    {% else %}
+        <ul style="padding-left: 0;">
+            <li class="content-li">
+                <div class="content-left">
+                    用户昵称
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    {{ user_info.username }}
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>邮</span>
+                    <span>箱</span>
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    {{ user_info.email }}
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>手</span>
+                    <span>机</span>
+                    <span>号</span>
+                </div>
+                <span>：</span>
+                <div class="content-right {% if user_info.phone_number == '' %}empty-info{% endif %}">
+                    {{ user_info.phone_number }}
+                    {% if user_info.phone_number == '' %}未填写{% endif %}
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>学</span>
+                    <span>校</span>
+                </div>
+                <span>：</span>
+                <div class="content-right {% if user_info.school == '' %}empty-info{% endif %}">
+                    {{ user_info.school }}
+                    {% if user_info.school == '' %}未填写{% endif %}
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    真实姓名
+                </div>
+                <span>：</span>
+                <div class="content-right {% if user_info.real_name == '' %}empty-info{% endif %}">
+                    {{ user_info.real_name }}
+                    {% if user_info.real_name == '' %}未填写{% endif %}
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    个人简介
+                </div>
+                <span>：</span>
+                <div class="content-right {% if user_info.motto == '' %}empty-info{% endif %}">
+                    {{ user_info.motto }}
+                    {% if user_info.motto == '' %}未填写{% endif %}
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>性</span>
+                    <span>别</span>
+                </div>
+                <span>：</span>
+                <div class="content-right {% if user_info.sex == '' %}empty-info{% endif %}">
+                    {{ user_info.sex }}
+                    {% if user_info.sex == '' %}未填写{% endif %}
+                </div>
+            </li>
+        </ul>
+    {% endif %}
+{% endblock %}
+{% block right_content %}
+    <div class="card mb-3">
+        <img src="{{ user_info.avatar.url }}" alt="" style="width: 253px;height: 253px;"
+        >
+    </div>
+{% endblock %}

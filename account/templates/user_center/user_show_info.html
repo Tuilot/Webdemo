@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}
+    个人主页
+{% endblock %}
+{% block left_content %}
+    <ul class="list-group">
+        {% if total != 0 %}
+            {% for article in articles %}
+                <li class="list-group-item">
+                    <a href="{% url 'article_detail' article.id %}" class="modal-title">{{ article.title }}</a><br>
+                    <span class="hint">
+                        发表于<em>{{ article.release_time|date:'Y-m-d H:i' }}</em>
+                        <div class="pull-right" style="float: right;">
+                            评论数<em>{{ article.comment_count }}</em>
+                            点赞数<em>{{ article.like_count }}</em>
+                        </div>
+                    </span>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li class="list-group-item">
+                该分类还未发布文章
+            </li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block right_content %}
+    <div class="card mb-3">
+        <img src="{{ user_info.avatar.url }}" alt="" style="width: 253px;height: 253px;"
+        >
+        <div style="margin: 10px 10px 10px 10px;">
+            <h4>{{ user_info.username }}</h4>
+            <span>{{ user_info.motto }}</span>
+
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block tool_bar %}
+    <div style="margin-bottom: 15px;">
+        <a class="feature-a {% if file_type == 'text' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'resource_list'%}?type=text">文档</a>
+        <a class="feature-a {% if file_type == 'picture' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'resource_list'%}?type=picture">相册</a>
+        <a class="feature-a {% if file_type == 'audio' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'resource_list'%}?type=audio">音频</a>
+        <a class="feature-a {% if file_type == 'video' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'resource_list'%}?type=video">视频</a>
+        <a class="feature-a {% if file_type == 'others' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'resource_list'%}?type=others">其他</a>
+    </div>
+{% endblock %}

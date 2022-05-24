@@ -1,0 +1,63 @@
+{% extends 'article_base.html' %}
+{% block left_content %}
+    <div style="padding: 20px;border-radius: 10px;" class="bg-light">
+        <form action="" method="post" style="text-align: center">
+            <table>
+                <tr>
+                    <td style="width: 92.3%;">
+                        <label for="keyword" style="margin-top: 10px; width: 100%;">
+                        <input type="text" name="keyword" class="form-control" placeholder="请输入关键字"
+                               id="keyword" value="{{ keyword }}" required>
+                        </label>
+                    </td>
+                    <td style="width:100%;">
+                        <button type="submit" class="btn btn-success" style="width: 100%">搜索</button>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <ul class="list-group">
+        {% if total != 0 %}
+            {% for article in articles %}
+                <li class="list-group-item">
+                    <a href="{% url 'article_detail' article.id %}" class="modal-title">{{ article.title }}</a><br>
+                    <span class="hint">
+                        发表于<em>{{ article.release_time|date:'Y-m-d H:i' }}</em>
+                        by <a >{{ article.author.username }}</a>
+                        <div class="pull-right" style="float: right;">
+                            评论数<em>{{ article.comment_count }}</em>
+                            点赞数<em>{{ article.like_count }}</em>
+                        </div>
+                    </span>
+                </li>
+            {% endfor %}
+        {% else %}
+            <li class="list-group-item">
+                该分类还未发布文章
+            </li>
+        {% endif %}
+    </ul>
+    <div class="col-9" style="margin-top: 20px;">
+        <ul class="pagination" id="pagination">
+            <li class="page-item {% if pagination.is_first_page == Ture %}disabled{% endif %}">
+                <a class="page-link"
+                   {% if pagination.is_first_page == False %}href="?page=1" {% endif %}>< </a>
+                {% for page in pagination.pagination %}
+                    <li class="page-item {% if page == pagination.current_page %} active{% endif %}">
+                    <a class="page-link"
+                       {% if page != '...' %}href="?page={{ page }}{% endif %}">{{ page }}</a>
+                {% endfor %}
+            <li class="page-item {% if pagination.is_last_page == Ture %}disabled{% endif %}">
+                <a class="page-link"
+                   {% if pagination.is_last_page == False %}href="?&page={{ pagination.page_count }}" {% endif %}>></a>
+        </ul>
+    </div>
+{% endblock %}
+{% block right_content %}
+    <div style="padding: 20px;border-radius: 10px;" class="bg-light">
+
+        <a type="submit" class="btn btn-success" style="margin-top: 10px; width: 100%" href="{% url 'article_edit' %}">发布帖子</a>
+    </div>
+{% endblock %}

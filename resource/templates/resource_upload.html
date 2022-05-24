@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}
+    上传文件
+{% endblock %}
+{% block content %}
+
+    <h4>上传文件</h4>
+
+    <form action="{% url 'resource_upload' %}" method="post" enctype="multipart/form-data">
+        <label>选择文件</label>
+        <div class="custom-file">
+            <label class="custom-file-label" for="select_file" id="select_file_label">选择文件</label>
+            <input type="file" class="custom-file-input" id="select_file" name="select_file">
+            <small style="color: red;">{{ error_msg.file }}</small>
+        </div>
+        <div>
+            <label for="file_show_name" style="margin-top: 10px;">文件名</label>
+            <input type="text" name="file_show_name" class="form-control" id="file_show_name" required>
+            <small style="color: red;">{{ error_msg.file_show_name }}</small>
+        </div>
+        <div>
+            <label for="file_type" style="margin-top: 10px;">文件分类</label>
+            <select class="form-control" id="file_type" name="file_type" required>
+                {% for key, value in choice_file_type %}
+                    <option value="{{ key }}" name="file_type">{{ value }}</option>
+                {% endfor %}
+            </select>
+            <small style="color: red;">{{ error_msg.file_type }}</small>
+        </div>
+        <div>
+            <button type="submit" class="btn btn-success" style="margin-top: 20px;">上传</button>
+        </div>
+    </form>
+
+    <script>
+        $(function () {
+            var file = "";
+            var fileName = "";
+            var fileNameText = "";
+            var fileExt = "";
+            $("#select_file").change(function () {
+                file = $("#select_file").val()
+                fileName = file.split("\\").pop()
+                fileNameText = fileName.substring(0, fileName.lastIndexOf("."));
+                {#fileExt = file.substr(file.lastIndexOf("."));#}
+                $("#select_file_label").html(fileName)
+                $("#file_show_name").val(fileNameText)
+            })
+        });
+    </script>
+{% endblock %}

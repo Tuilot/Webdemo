@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block tool_bar %}
+    <div style="margin-bottom: 15px;">
+        <a class="feature-a {% if page_type == 'profile' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'profile'%}">个人资料</a>
+        <a class="feature-a {% if page_type == 'edit_user_info' %}text-bold{% endif %}" style="text-decoration: none; color: black" href="{% url 'edit_user_info'%}">修改资料</a>
+    </div>
+{% endblock %}

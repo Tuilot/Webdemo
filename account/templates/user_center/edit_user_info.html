@@ -1,0 +1,167 @@
+{% extends 'user_center/user_center_base.html' %}
+{% block title %}
+    修改资料
+{% endblock %}
+{% block left_content %}
+    <form action="" method="post">
+        <ul style="padding-left: 0;">
+            <li class="content-li">
+                <div class="content-left">
+                    用户昵称
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_username">
+                        <input type="text" name="edit_username" class="form-control edit-user-info-input"
+                               id="edit_username"
+                               value="{{ user_info.username }}" required>
+                        <span class="edit-error-message">{{ form.edit_username.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>邮</span>
+                    <span>箱</span>
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_email">
+                        <input type="text" name="edit_email" class="form-control edit-user-info-input" id="edit_email"
+                               value="{{ user_info.email }}" required>
+                        <span class="edit-error-message">{{ form.edit_email.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>手</span>
+                    <span>机</span>
+                    <span>号</span>
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_phone_number">
+                        <input type="text" name="edit_phone_number" class="form-control edit-user-info-input"
+                               id="edit_phone_number"
+                               value="{{ user_info.phone_number }}">
+                        <span class="edit-error-message">{{ form.edit_phone_number.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>学</span>
+                    <span>校</span>
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_school">
+                        <input type="text" name="edit_school" class="form-control edit-user-info-input" id="edit_school"
+                               value="{{ user_info.school }}">
+                        <span class="edit-error-message">{{ form.edit_school.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    真实姓名
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_real_name">
+                        <input type="text" name="edit_real_name" class="form-control edit-user-info-input"
+                               id="edit_real_name"
+                               value="{{ user_info.real_name }}">
+                        <span class="edit-error-message">{{ form.edit_real_name.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    个人简介
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_motto">
+                        <input type="text" name="edit_motto" class="form-control edit-user-info-input" id="edit_motto"
+                               value="{{ user_info.motto }}">
+                        <span class="edit-error-message">{{ form.edit_motto.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+            <li class="content-li">
+                <div class="content-left">
+                    <span>性</span>
+                    <span>别</span>
+                </div>
+                <span>：</span>
+                <div class="content-right">
+                    <label for="edit_sex">
+                        <input type="text" name="edit_sex" class="form-control edit-user-info-input" id="edit_sex"
+                               value="{{ user_info.sex }}">
+                        <span class="edit-error-message">{{ form.edit_sex.errors.0 }}</span>
+                    </label>
+                </div>
+            </li>
+        </ul>
+        <button type="submit" class="btn btn-success">提交修改</button>
+    </form>
+{% endblock %}
+{% block right_content %}
+    <div class="card mb-3" style="width: 255px;">
+        <img src="{{ user_info.avatar.url }}" alt="" style="width: 253px;height: 253px;"
+             id="avatar-img">
+        <div style="padding-top: 10px;padding-bottom: 10px;border-top: 1px solid rgba(0, 0, 0, .125);">
+            <label class="select-avatar-btn">
+                <a class="btn btn-success">选择头像</a>
+                <input type="file" hidden id="avatar-input" accept="image/*">
+            </label>
+            <button class="btn btn-success submit-avatar-btn" onclick="update_avatar()" disabled
+                    id="confirm-update-avatar">确认修改
+            </button>
+        </div>
+    </div>
+    <div class="position-fixed bottom-0 right-0 p-3" style="z-index: 5; right: 0; bottom: 0;">
+        <div id="liveToast" class="toast hide" role="alert" aria-live="assertive" aria-atomic="true" data-delay="2000">
+            <div class="toast-body">
+                头像修改成功！
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#avatar-input').on('change', function () {
+            // 获取用户最后一次选择的图片
+            var choose_file = $(this)[0].files[0];
+            // 创建一个新的FileReader对象，用来读取文件信息
+            var reader = new FileReader();
+            // 读取用户上传的图片的路径
+            reader.readAsDataURL(choose_file);
+            // 读取完毕之后，将图片的src属性修改成用户上传的图片的本地路径
+            reader.onload = function () {
+                $("#avatar-img").attr("src", reader.result)
+                $("#confirm-update-avatar").attr('disabled', false)
+            }
+        });
+
+        function update_avatar() {
+            var avatar = $('#avatar-input')[0].files[0];
+            var formData = new FormData()
+            formData.append('avatar', avatar)
+            $.ajax({
+                url: '{% url 'update_avatar' %}',
+                type: 'post',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $("#avatar-img").attr("src", data['avatar_url'])
+                    if (data['result'] === 'success') {
+                        $('#liveToast').toast('show')
+                        $("#confirm-update-avatar").attr('disabled', true)
+                    }
+                }
+            })
+        }
+    </script>
+{% endblock %}

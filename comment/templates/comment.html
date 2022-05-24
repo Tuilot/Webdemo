@@ -1,0 +1,77 @@
+<ul class="comment-list" style="margin-right: 40px;">
+    {% for comment in comment_list %}
+        <li class="comment-item" style="margin-top: 10px;">
+            <a class="nickname"
+               href="{% url 'user_show_info' comment.0.commenter.id %}">{{ comment.0.commenter.username }}</a>
+                {% if comment.0.commenter.id == author_id %} (作者）
+                {% endif %}
+            <div class="text">
+                {{ comment.0.content }}
+            </div>
+            <div style="display: flex;" class="small">
+                <span class="submit-date">{{ comment.0.comment_time|date:'Y-m-d h:i' }}</span>
+                <div style="margin-left: auto">
+{#                    <i class="fa fa-thumbs-up"></i>#}
+                    <i class="fa fa-comment" style="margin-left: 20px; cursor: pointer"
+                       data-toggle="collapse" data-target="#reply-{{ comment.0.id }}"></i>
+                </div>
+            </div>
+            <div style=" margin-top: 10px;width: 100%" id="reply-{{ comment.0.id }}" class="collapse">
+                <form action="" method="post">
+                                    <textarea name="content" rows="1" class="form-control" aria-label="With textarea"
+                                              style="width: 90%; float: left"
+                                              placeholder="回复" required id="input-reply-{{ comment.0.id }}"></textarea>
+                    <button type="button" class="btn btn-success"
+                            style="margin-left: 10px;"
+                            onclick="post_reply('{{ comment.0.id }}')">
+                        回复
+                    </button>
+                </form>
+            </div>
+            {% if comment.1|length > 0 %}
+                <div style="margin: 5px 20px 5px 40px; padding: 5px;">
+                    {% for reply in comment.1 %}
+                        <div>
+                            <a class="nickname"
+                                href="{% url 'user_show_info' reply.commenter.id %}">{{ reply.commenter.username }}</a>
+                                {% if reply.commenter.id == author_id %} (作者）
+                                {% endif %}
+                            {% if reply.comment_id != comment.0.id %}
+                                回复
+                                <a class="nickname"
+                                    href="{% url 'user_show_info' reply.reply_user_id %}">{{ reply.reply_user_name }}</a>
+                                    (作者)
+                            {% endif %}
+                            <div class="text">
+                                {{ reply.content }}
+                            </div>
+                            <div style="display: flex;" class="small">
+                                <span class="submit-date">{{ reply.comment_time|date:'Y-m-d h:i' }}</span>
+                                <div style="margin-left: auto">
+{#                                    <i class="fa fa-thumbs-up"></i>#}
+                                    <i class="fa fa-comment" style="margin-left: 20px; cursor: pointer"
+                                       data-toggle="collapse" data-target="#reply-{{ reply.id }}"></i>
+                                </div>
+                            </div>
+                            <div style=" margin-top: 10px;width: 100%" id="reply-{{ reply.id }}"
+                                 class="collapse">
+                                <form action="" method="post">
+                                                <textarea name="content" rows="1" class="form-control"
+                                                          aria-label="With textarea"
+                                                          style="width: 89%; float: left"
+                                                          placeholder="回复" required
+                                                          id="input-reply-{{ reply.id }}"></textarea>
+                                    <button type="button" class="btn btn-success"
+                                            style="margin-left: 10px;"
+                                            onclick="post_reply('{{ reply.id }}')">
+                                        回复
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>

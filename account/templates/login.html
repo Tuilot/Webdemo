@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %}
+    登录
+{% endblock %}
+{% block content %}
+    {% if hint_message %}
+    <div class="alert alert-primary" role="alert">
+        {{ hint_message }}
+    </div>
+    {% endif %}
+	<div id="login-page" class="container">
+		<h1>请登录</h1>
+        <div class="row">
+            <div class="col-md-12 col-md-offset-2">
+                <form action="{% url 'login' %}" method="post">
+                    {% for item in form %}
+                        <label for={{ item.id_for_label }}>{{ item.label }}</label>
+                        {{ item }}
+                        <small style="color: red;">{{ item.errors.as_text }}</small>
+                    {% endfor %}
+                    <div>
+                        <button type="submit" class="btn btn-success" style="margin-top: 10px;">登录</button>
+{#                        <a href="/forgetpwd/" class="btn btn-success" style="margin-top: 10px;">忘记密码</a>#}
+                        <a href="{% url 'register' %}" class="btn btn-success" style="margin-top: 10px;">注册新账号</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+	</div>
+{% endblock content %}
